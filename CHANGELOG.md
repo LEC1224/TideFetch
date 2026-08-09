@@ -2,6 +2,11 @@
 
 All notable TideFetch changes are documented here.
 
+## Unreleased
+
+- Added opt-in Gradle release signing through an ignored local
+  `keystore.properties` file.
+
 ## 0.1.0-alpha.1 — 2026-08-09
 
 Initial public source preview:

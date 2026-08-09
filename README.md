@@ -41,7 +41,22 @@ On Windows PowerShell, use the corresponding `./gradlew.bat` commands. The debug
 
 The first on-device use initializes the Python/`yt-dlp` payload. Downloads require network access and can consume substantial storage and data, especially when separate high-resolution video and audio streams must be merged.
 
-Release APKs produced by this project are intentionally unsigned. Sign with a user-owned key for installation/distribution and retain the matching R8 mapping from `app/build/outputs/mapping/release/`. Never commit signing material.
+Release APKs are signed when an ignored `keystore.properties` file is present at
+the repository root with the following fields:
+
+```properties
+storeFile=/absolute/path/to/tidefetch-release.jks
+storePassword=your-store-password
+keyAlias=tidefetch-release
+keyPassword=your-key-password
+```
+
+Without that local file, release builds remain unsigned so public CI and
+contributors can still build the project. Never commit a keystore, password, or
+`keystore.properties`. Back up the permanent release key and recovery
+credentials securely: losing the key prevents compatible updates to APKs signed
+with it. Retain the matching R8 mapping from
+`app/build/outputs/mapping/release/` for every published version.
 
 ## How it works
 
