@@ -1,0 +1,54 @@
+{
+  "schema": 1,
+  "sources": [
+    {
+      "file": "youtubedl-android-0.18.1.tar.gz",
+      "localCacheFile": "youtubedl-android-0.18.1.full.tar.gz",
+      "url": "https://codeload.github.com/yausername/youtubedl-android/tar.gz/refs/tags/0.18.1",
+      "sha256": "08833449d671142c34325203cbfcca31c4fa668a0c4b8c0c31a2e4354ce11b98",
+      "bytes": 218943322
+    },
+    {
+      "file": "termux-packages-de5f604e.tar.gz",
+      "url": "https://codeload.github.com/termux/termux-packages/tar.gz/de5f604e60ba4a9d0d989c8d56e0c307fe6e3a0c",
+      "sha256": "46bd57e7e4d462dd63c21c5d99eb67b5b30af14f35f8dcde57c7b37d3cbb3cbe",
+      "bytes": 8329787
+    },
+    {
+      "file": "yt-dlp-2025.11.12.tar.gz",
+      "url": "https://codeload.github.com/yt-dlp/yt-dlp/tar.gz/refs/tags/2025.11.12",
+      "sha256": "6f5f2d716968d6c84d05d179fc1ce50ccca23706b9dbc3c57fec97a8b9ea440",
+      "bytes": 2930912
+    },
+    {
+      "file": "ffmpeg-7.1.1.tar.xz",
+      "url": "https://ffmpeg.org/releases/ffmpeg-7.1.1.tar.xz",
+      "sha256": "733984395e0dbbe5c046abda2dc49a5544e7e0e1e2366bba849222ae9e3a03b1",
+      "bytes": 11019500
+    },
+    {
+      "file": "Python-3.12.11.tar.xz",
+      "url": "https://www.python.org/ftp/python/3.12.11/Python-3.12.11.tar.xz",
+      "sha256": "c30bb24b7f1e9a19b11b55a546434f74e739bb4c271a3e3a80ff4380d49f7adb",
+      "bytes": 20525812
+    },
+    {
+      "file": "quickjs-2025-04-26.tar.xz",
+      "url": "https://bellard.org/quickjs/quickjs-2025-04-26.tar.xz",
+      "sha256": "2f20074c25166ef6f781f381c50d57b502cb85d470d639abccebbef7954c83bf",
+      "bytes": 579376
+    },
+    {
+      "file": "mutagen-1.47.0.tar.gz",
+      "url": "https://github.com/quodlibet/mutagen/releases/download/release-1.47.0/mutagen-1.47.0.tar.gz",
+      "sha256": "719fadef0a978c31b4cf3c956261b3c58b6948b32023078a2117b1de09f0fc99",
+      "bytes": 1274186
+    },
+    {
+      "file": "pycryptodomex-3.23.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/source/p/pycryptodomex/pycryptodomex-3.23.0.tar.gz",
+      "sha256": "71909758f010c82bc99b0abf4ea12012c98962fbf0583c2164f8b84533c2e4da",
+      "bytes": 4922157
+    }
+  ]
+}

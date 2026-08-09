@@ -1,0 +1,11 @@
+SOURCE CODE FOR TIDEFETCH
+
+TideFetch is licensed under GNU GPL version 3. The complete version-matched
+source package for this binary is available without charge from:
+
+https://github.com/LEC1224/TideFetch/releases/tag/v0.1.0-alpha.2
+
+Download TideFetch-0.1.0-alpha.2-corresponding-source.zip and its .sha256 file.
+The project repository and source inquiries are available at:
+
+https://github.com/LEC1224/TideFetch

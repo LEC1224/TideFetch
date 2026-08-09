@@ -8,7 +8,7 @@ TideFetch is a polished, local-first Android front end for `yt-dlp`. Paste a sup
 
 ## Project status
 
-TideFetch is an **alpha source preview**. The project builds and its JVM tests and Android lint checks pass, but it has not yet completed real-device download testing. Public binary releases are intentionally withheld until a permanent signing key and the complete corresponding-source package for the bundled GPL native stack are ready.
+TideFetch is an **alpha preview**. The project builds, its JVM tests and Android lint checks pass, and the application has received initial device testing. Alpha binaries are signed and published together with their corresponding-source package; they are not yet production recommendations because the historical native AAR assembly was not reproducible byte-for-byte.
 
 ## Highlights
 
@@ -77,7 +77,7 @@ This split keeps platform storage, downloader execution, and presentation concer
 - MP3 and WAV are audio extractions. WAV files are uncompressed and can be very large.
 - Some sites require an authenticated browser session, cookies, a subscription, a region, or an age-verified account. TideFetch does not currently expose cookie/login import.
 - DRM-protected streams are unsupported. Site layout and API changes can temporarily break extractors until `yt-dlp` is updated.
-- The latest available Android wrapper (`0.18.1`) embeds yt-dlp `2025.11.12` and Python 3.8. Newer desktop yt-dlp releases are not automatically substituted because their Python requirements and unsigned runtime-update path need an Android-specific audit. Verify the target sites on real devices before shipping; update the wrapper/Python payload as one reviewed toolchain when a compatible release is available.
+- The Android wrapper (`0.18.1`) embeds yt-dlp `2025.11.12`, Python 3.12.11, QuickJS 2025-04-26, FFmpeg 7.1.1, Mutagen 1.47.0, and PyCryptodome 3.23.0. Newer desktop yt-dlp releases are not automatically substituted because their Python requirements and unsigned runtime-update path need an Android-specific audit. Verify target sites before shipping; update the wrapper/Python payload as one reviewed toolchain when a compatible release is available.
 - Android may show a system clipboard-access notification. Clipboard autofill intentionally accepts only web URLs.
 - A completed file may take a moment to appear in a particular gallery app while that app refreshes its media index.
 
@@ -96,6 +96,6 @@ Do not update only one of the library/FFmpeg artifacts: mismatched native payloa
 
 ## Third-party software
 
-The downloader stack includes GPL-covered software and has source-distribution obligations. See [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) before redistributing an APK. That file is a practical inventory, not legal advice or a replacement for the complete license texts required in a release.
+The downloader stack includes GPL-covered software and has source-distribution obligations. See [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md), [SOURCE_OFFER.md](SOURCE_OFFER.md), and the [corresponding-source kit](compliance/README.md) before redistributing an APK. Every binary release must remain accompanied by its version-matched source ZIP. These files are a practical inventory, not legal advice.
 
 See also the [privacy policy](PRIVACY.md), [changelog](CHANGELOG.md), and complete [GPL-3.0 license](LICENSE).

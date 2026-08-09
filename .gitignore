@@ -29,3 +29,8 @@ keystore.properties
 .DS_Store
 Thumbs.db
 desktop.ini
+
+# Generated GPL compliance inputs and release bundles
+compliance/cache/
+compliance/work/
+dist/

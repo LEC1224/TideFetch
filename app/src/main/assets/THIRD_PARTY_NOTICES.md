@@ -29,10 +29,12 @@ payload embedded by youtubedl-android.
 - Source: https://git.ffmpeg.org/ffmpeg.git
 - Legal and compliance guidance: https://ffmpeg.org/legal.html
 
-FFmpeg is primarily LGPL-2.1-or-later, but builds enabling GPL code or external
-GPL libraries are GPL-covered. Inspect the exact binary configuration in the
-0.18.1 artifact and provide the corresponding source, relinkability, notices,
-and license texts its effective license requires.
+The embedded FFmpeg is version 7.1.1 and reports `--enable-gpl`,
+`--enable-version3`, `--enable-libx264`, and `--enable-libx265` among its build
+options. This conveyed build is GPLv3-or-later. Its matching source, Termux
+recipes/patches, enabled-library source, notices, and rebuild documentation are
+provided through the version-specific TideFetch source offer packaged with this
+application.
 
 ## Android application libraries
 

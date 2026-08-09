@@ -29,9 +29,9 @@ The main yt-dlp source is released under the Unlicense, but release payloads can
 - Source: <https://git.ffmpeg.org/ffmpeg.git>
 - Legal and compliance guidance: <https://ffmpeg.org/legal.html>
 
-FFmpeg is primarily licensed under LGPL-2.1-or-later. Enabling optional GPL code changes the resulting FFmpeg build to GPL-2.0-or-later; external libraries can add further terms. In particular, a build that enables GPL components such as `libx264` is GPL-covered. The artifact name alone does not prove which configuration was used.
+The exact embedded FFmpeg reports version 7.1.1 and was built with `--enable-gpl --enable-version3 --enable-libx264 --enable-libx265` plus other external libraries. The conveyed build is therefore GPLv3-or-later; it must not be described as an ordinary LGPL-only FFmpeg build.
 
-For release distribution, inspect the exact prebuilt FFmpeg artifact used by version 0.18.1, retain its build configuration and notices, and satisfy the effective LGPL/GPL obligations. Depending on that build and how it is conveyed, this can include relinkability requirements, corresponding source for FFmpeg and enabled libraries, a written/source offer, attribution, and full license texts. Do not describe the binary as merely "portable" or "free to use" without this audit.
+The matching release source asset preserves FFmpeg 7.1.1, the pinned Termux build recipes/patches, and sources for the enabled native dependencies. See `SOURCE_OFFER.md` and `compliance/SOURCE_PROVENANCE.md`. The historical 0.18.1 AAR was assembled manually upstream, so byte-for-byte rebuild provenance is not claimed; production distribution should replace it with a clean, controlled native rebuild.
 
 ## Android application libraries
 
