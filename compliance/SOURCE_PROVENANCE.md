@@ -79,4 +79,5 @@ tree. `NATIVE_REBUILD.md` records the reconstructed procedure and its limits.
 `sources.lock.json` is the machine-readable authority for fixed downloads.
 `make-source-package.ps1` refuses to package a fixed archive whose SHA-256 does
 not match. The generated package also contains SHA-256 manifests for its own
-contents and for the exact release APK.
+contents plus release metadata identifying the exact Git commit and release APK
+SHA-256.

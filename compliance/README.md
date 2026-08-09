@@ -30,7 +30,8 @@ Prerequisites on Windows are Git, PowerShell 7, WSL2 with Ubuntu, `curl`,
 ```powershell
 wsl.exe bash compliance/download-termux-sources.sh
 ./gradlew.bat exportReleaseDependencySources
-pwsh -File compliance/make-source-package.ps1 -GitRef HEAD -Version 0.1.0-alpha.2
+pwsh -File compliance/make-source-package.ps1 -GitRef HEAD -Version 0.1.0-alpha.2 `
+  -ApkPath app/build/outputs/apk/release/app-arm64-v8a-release.apk
 ```
 
 The first command downloads the source archive or Git checkout declared by
@@ -38,7 +39,8 @@ each relevant Termux recipe in the FFmpeg/Python build dependency closure. The
 Gradle task exports source artifacts for the resolved Android/Kotlin dependency
 graph. The final command verifies every fixed source snapshot, exports the
 application source, adds both source caches, and creates a ZIP and SHA-256 file
-under `dist/`.
+under `dist/`. The generated release metadata binds the source package to the
+exact Git commit and signed APK SHA-256.
 
 The generated ZIP must be retained for as long as the corresponding binary is
 offered. Put it on the same GitHub release as the APK and link it prominently
