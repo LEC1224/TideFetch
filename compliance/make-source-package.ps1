@@ -88,7 +88,12 @@ $hashLines = Get-ChildItem -LiteralPath $packageRoot -Recurse -File | Sort-Objec
     $relative = [IO.Path]::GetRelativePath($packageRoot, $_.FullName).Replace('\', '/')
     "$hash  $relative"
 }
-$hashLines | Set-Content -LiteralPath (Join-Path $packageRoot "SHA256SUMS") -Encoding utf8NoBOM
+$manifestText = ($hashLines -join "`n") + "`n"
+[IO.File]::WriteAllText(
+    (Join-Path $packageRoot "SHA256SUMS"),
+    $manifestText,
+    [Text.UTF8Encoding]::new($false)
+)
 
 $output = Join-Path $dist "TideFetch-$Version-corresponding-source.zip"
 Compress-Archive -LiteralPath $packageRoot -DestinationPath $output -CompressionLevel Optimal -Force
