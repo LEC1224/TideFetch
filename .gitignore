@@ -1,0 +1,31 @@
+# Gradle and Kotlin
+.gradle/
+.kotlin/
+**/build/
+!gradle/wrapper/gradle-wrapper.jar
+
+# Local Android SDK and machine-specific configuration
+local.properties
+
+# Android Studio / IntelliJ IDEA
+*.iml
+.idea/
+out/
+
+# Native build output
+.externalNativeBuild/
+.cxx/
+
+# Android tooling
+captures/
+*.hprof
+
+# Signing material and local secrets
+keystore.properties
+*.jks
+*.keystore
+
+# Operating-system files
+.DS_Store
+Thumbs.db
+desktop.ini

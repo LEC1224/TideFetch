@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="tide_blue">#1769E0</color>
+    <color name="tide_blue_dark">#0B3F91</color>
+    <color name="tide_blue_light">#D8E9FF</color>
+    <color name="tide_surface_light">#F8FAFD</color>
+    <color name="tide_surface_dark">#0E141D</color>
+    <color name="ic_launcher_background">#071A33</color>
+    <color name="splash_background">#F8FAFD</color>
+</resources>
