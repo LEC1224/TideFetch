@@ -88,12 +88,13 @@ object DownloadEvents {
                 outputMimeType = mimeType,
                 fileName = fileName,
                 errorMessage = null,
+                errorSuggestion = null,
             )
         }
     }
 
-    fun markError(message: String) {
-        addLog("ERROR: $message")
+    fun markError(message: String, suggestion: String? = null) {
+        addLog("SUMMARY: $message")
         mutableState.update {
             it.copy(
                 phase = DownloadPhase.ERROR,
@@ -101,6 +102,7 @@ object DownloadEvents {
                 etaSeconds = null,
                 status = "Download failed",
                 errorMessage = message,
+                errorSuggestion = suggestion,
             )
         }
     }
@@ -115,6 +117,7 @@ object DownloadEvents {
                 etaSeconds = null,
                 status = "Canceled",
                 errorMessage = null,
+                errorSuggestion = null,
             )
         }
     }

@@ -6,9 +6,9 @@ same GitHub release page:
 
 <https://github.com/LEC1224/TideFetch/releases>
 
-For TideFetch 0.1.0-alpha.2, use:
+For TideFetch 0.1.0-alpha.3, use:
 
-<https://github.com/LEC1224/TideFetch/releases/tag/v0.1.0-alpha.2>
+<https://github.com/LEC1224/TideFetch/releases/tag/v0.1.0-alpha.3>
 
 The source asset contains the TideFetch application source, build scripts,
 license texts, notices, pinned upstream source snapshots, Termux recipes and

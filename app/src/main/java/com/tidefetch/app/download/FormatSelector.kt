@@ -10,6 +10,7 @@ object FormatSelector {
         config: DownloadConfig,
         stagingDirectory: File,
         resultManifest: File,
+        useTwitterSyndicationFallback: Boolean = false,
     ): YoutubeDLRequest {
         val request = YoutubeDLRequest(config.url)
             .addOption("--no-playlist")
@@ -17,8 +18,15 @@ object FormatSelector {
             .addOption("--progress")
             .addOption("--progress-delta", 0.25)
             .addOption("--no-mtime")
+            .addOption("--retries", 3)
+            .addOption("--fragment-retries", 3)
+            .addOption("--extractor-retries", 3)
             .addOption("-P", stagingDirectory.absolutePath)
             .addOption("-o", "%(title).160B [%(id)s].%(ext)s")
+
+        if (useTwitterSyndicationFallback) {
+            request.addOption("--extractor-args", "twitter:api=syndication")
+        }
 
         val heightLimit = config.resolution.maxHeight?.let { "[height<=$it]" }.orEmpty()
 

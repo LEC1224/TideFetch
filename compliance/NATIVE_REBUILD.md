@@ -46,9 +46,11 @@ and build PyCryptodome 3.23.0 for each target ABI against that Python runtime.
 ## 4. Assemble QuickJS and yt-dlp
 
 Build QuickJS 2025-04-26 with the same Termux prefix and ABI settings and package
-the executable as `libqjs.so`. Build or copy the yt-dlp 2025.11.12 zipapp whose
-`yt_dlp/version.py` identifies release Git head
-`335653be82d5ef999cfc2879d005397402eebec1`.
+the executable as `libqjs.so`. TideFetch installs the checksum-pinned yt-dlp
+2026.07.04 zipapp whose `yt_dlp/version.py` identifies release Git head
+`fdec00e0bf530dc6c3cc7b1dd780e95d9ae460e9`. The unmodified wrapper AAR also
+contains its older 2025.11.12 resource; preserve both source snapshots when
+distributing the historical AAR.
 
 ## 5. Build replacement AARs
 

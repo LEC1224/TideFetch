@@ -17,7 +17,7 @@ TideFetch is an **alpha preview**. The project builds, its JVM tests and Android
 - Works with sites supported by the bundled `yt-dlp` extractor, including many YouTube, Facebook, and X/Twitter links.
 - Resolution presets plus an **Original** option. The default video choice prefers the original resolution in an MP4 container with H.264-compatible video when the source and device toolchain allow it.
 - H.264-preferred and source-codec MP4, source-quality WebM, and M4A/MP3/WAV audio-only output choices.
-- A clear progress state and an expandable, copyable activity log for diagnosing extractor, network, merge, and conversion errors.
+- A clear progress state and an expandable, copyable activity log that preserves original extractor, network, merge, and conversion errors.
 - Light and dark blue themes, with **System default** selected initially and a saved user override.
 - Publishes completed video and audio through `MediaStore`, so files appear in gallery/media apps under a TideFetch collection rather than remaining in private app storage.
 
@@ -77,7 +77,8 @@ This split keeps platform storage, downloader execution, and presentation concer
 - MP3 and WAV are audio extractions. WAV files are uncompressed and can be very large.
 - Some sites require an authenticated browser session, cookies, a subscription, a region, or an age-verified account. TideFetch does not currently expose cookie/login import.
 - DRM-protected streams are unsupported. Site layout and API changes can temporarily break extractors until `yt-dlp` is updated.
-- The Android wrapper (`0.18.1`) embeds yt-dlp `2025.11.12`, Python 3.12.11, QuickJS 2025-04-26, FFmpeg 7.1.1, Mutagen 1.47.0, and PyCryptodome 3.23.0. Newer desktop yt-dlp releases are not automatically substituted because their Python requirements and unsigned runtime-update path need an Android-specific audit. Verify target sites before shipping; update the wrapper/Python payload as one reviewed toolchain when a compatible release is available.
+- TideFetch pins and checksum-verifies the active yt-dlp `2026.07.04` zipapp at build time. The Android wrapper (`0.18.1`) provides Python 3.12.11, QuickJS 2025-04-26, FFmpeg 7.1.1, Mutagen 1.47.0, and PyCryptodome 3.23.0; its dormant fallback resource still contains yt-dlp `2025.11.12`. TideFetch does not use the wrapper's network updater or download executable code silently at runtime. Site changes can still require a reviewed app update.
+- X/Twitter extraction normally uses yt-dlp's primary extractor. For public posts whose API request fails, TideFetch retries once with yt-dlp's documented syndication API fallback; that fallback may expose less metadata or fewer media variants. Protected posts and links requiring a signed-in session remain unsupported.
 - Android may show a system clipboard-access notification. Clipboard autofill intentionally accepts only web URLs.
 - A completed file may take a moment to appear in a particular gallery app while that app refreshes its media index.
 
@@ -85,9 +86,9 @@ Always respect copyright, the source site's terms, local law, and the media owne
 
 ## Updating the downloader toolchain
 
-TideFetch pins `youtubedl-android` and its FFmpeg artifact to `0.18.1` for reproducible builds. To update:
+TideFetch pins `youtubedl-android` and its FFmpeg artifact to `0.18.1`, and pins the active yt-dlp zipapp by version and SHA-256. To update:
 
-1. Change all youtubedl-android module versions together in the Gradle dependency declaration or version catalog.
+1. Change all youtubedl-android module versions together, or replace the reviewed `res/raw/ytdlp` zipapp and its version/SHA-256 constants together.
 2. Read the upstream release notes and verify the supported Android ABIs, minimum SDK, packaged `yt-dlp` version, and FFmpeg configuration.
 3. Rebuild from a clean checkout, run `./gradlew test assembleDebug`, and exercise one direct download, one split-stream merge, MP3 extraction, WAV extraction, cancellation, and `MediaStore` publication on Android 10 and a current Android version.
 4. Refresh `THIRD_PARTY_NOTICES.md` and ship the exact license texts and corresponding source/offers required by the binaries in the APK.

@@ -20,7 +20,8 @@ payload is:
 
 | Component | Inspected version/evidence |
 |---|---|
-| yt-dlp | `2025.11.12`, release Git head `335653be82d5ef999cfc2879d005397402eebec1` |
+| Active yt-dlp override | `2026.07.04`, release Git head `fdec00e0bf530dc6c3cc7b1dd780e95d9ae460e9`, app resource SHA-256 `495be29ff4d9d4e9be7eabdfef225221e5d5282e77f2f505abc6dca80349f3fd` |
+| Wrapper yt-dlp resource | `2025.11.12`, release Git head `335653be82d5ef999cfc2879d005397402eebec1` (packaged but replaced before wrapper initialization) |
 | Python | 3.12.11 |
 | QuickJS | 2025-04-26 |
 | Mutagen | 1.47.0 |
@@ -61,7 +62,13 @@ The native payload entered youtubedl-android through these upstream changes:
 - FFmpeg bump: `b40e6784187ab9ea3bdbbdbb7d028e77ea45f5d0`
 - Python bump: `8908be4439b01ed560369457bcca76ba22a6a354`
 - QuickJS addition: `4e2bb8b4dbe15d13f57cf37c72e155b9f359d3fb`
-- yt-dlp 2025.11.12 bump: `0611bd9bdb55093ebbeeedc03bc7325e3fb1f94f`
+- yt-dlp 2025.11.12 wrapper bump: `0611bd9bdb55093ebbeeedc03bc7325e3fb1f94f`
+
+TideFetch adds the audited 2026.07.04 zipapp at the application layer rather
+than mutating or remotely updating the published wrapper AAR. On initialization
+the app verifies the bundled SHA-256 and atomically installs it into the
+wrapper's private runtime path before `YoutubeDL.init` runs. No runtime network
+update is performed.
 
 The upstream build notes use the Termux package builder with:
 

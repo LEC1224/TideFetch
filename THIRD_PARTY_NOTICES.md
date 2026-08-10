@@ -21,7 +21,7 @@ The app links to and packages modules from youtubedl-android. Distribution of a 
 - License: <https://github.com/yt-dlp/yt-dlp/blob/master/LICENSE>
 - Bundled-component notices: <https://github.com/yt-dlp/yt-dlp/blob/master/THIRD_PARTY_LICENSES.txt>
 
-The main yt-dlp source is released under the Unlicense, but release payloads can contain components under other licenses, including MIT and ISC terms. Preserve the notices that accompany the exact yt-dlp payload embedded by youtubedl-android.
+The main yt-dlp source is released under the Unlicense, but release payloads can contain components under other licenses, including MIT and ISC terms. TideFetch 0.1.0-alpha.3 carries a checksum-pinned yt-dlp `2026.07.04` zipapp as the active runtime and also carries the wrapper's dormant `2025.11.12` resource. Preserve the notices and source snapshots accompanying both exact payloads.
 
 ### FFmpeg
 

@@ -6,6 +6,19 @@ All notable TideFetch changes are documented here.
 
 - No changes yet.
 
+## 0.1.0-alpha.3 — 2026-08-10
+
+- Fixed a release-only R8 failure that could prevent the portable downloader
+  from initializing and surface only an obfuscated class name such as `e3.f`.
+- Updated the active yt-dlp runtime to the verified `2026.07.04` release while
+  retaining the pinned youtubedl-android/FFmpeg toolchain.
+- Preserved merged yt-dlp/FFmpeg output in Technical details, automatically
+  opened diagnostics after failure, and added cause-specific recovery advice.
+- Added bounded extractor/fragment retries and a one-time, documented Twitter
+  syndication fallback for public X posts when the primary API path fails.
+- Expanded regression coverage for X URL detection, fallback arguments, retry
+  policy, initialization failures, and error classification.
+
 ## 0.1.0-alpha.2 — 2026-08-09
 
 - Added opt-in Gradle release signing through an ignored local

@@ -298,7 +298,11 @@ private fun TideFetchScreen(
                     }
                 }
                 item {
-                    TechnicalDetailsCard(download.logs, onClearLogs)
+                    TechnicalDetailsCard(
+                        logs = download.logs,
+                        expandForError = download.phase == DownloadPhase.ERROR,
+                        onClearLogs = onClearLogs,
+                    )
                 }
                 item {
                     Text(
@@ -623,9 +627,19 @@ private fun OutcomeCard(
                         it,
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        maxLines = 3,
+                        maxLines = if (error) 5 else 3,
                         overflow = TextOverflow.Ellipsis,
                     )
+                }
+                if (error) {
+                    download.errorSuggestion?.let { suggestion ->
+                        Spacer(Modifier.height(5.dp))
+                        Text(
+                            suggestion,
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        )
+                    }
                 }
             }
         }
@@ -665,8 +679,12 @@ private fun OutcomeCard(
 }
 
 @Composable
-private fun TechnicalDetailsCard(logs: List<String>, onClearLogs: () -> Unit) {
-    var expanded by remember { mutableStateOf(false) }
+private fun TechnicalDetailsCard(
+    logs: List<String>,
+    expandForError: Boolean,
+    onClearLogs: () -> Unit,
+) {
+    var expanded by remember(expandForError) { mutableStateOf(expandForError) }
     val logScroll = rememberScrollState()
     LaunchedEffect(logs.size, expanded) {
         if (expanded) logScroll.scrollTo(logScroll.maxValue)
@@ -685,7 +703,11 @@ private fun TechnicalDetailsCard(logs: List<String>, onClearLogs: () -> Unit) {
             Column(Modifier.weight(1f)) {
                 Text("Technical details", fontWeight = FontWeight.SemiBold)
                 Text(
-                    if (logs.isEmpty()) "Logs will appear here" else "${logs.size} log lines",
+                    if (logs.isEmpty()) {
+                        "Engine output will appear here"
+                    } else {
+                        "${logs.size} diagnostic lines"
+                    },
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )

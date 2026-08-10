@@ -20,6 +20,12 @@ object UrlTools {
             !uri.host.isNullOrBlank()
     }.getOrDefault(false)
 
+    fun isXUrl(value: String): Boolean = runCatching {
+        val host = URI(value.trim()).host?.lowercase().orEmpty()
+        host == "x.com" || host.endsWith(".x.com") ||
+            host == "twitter.com" || host.endsWith(".twitter.com")
+    }.getOrDefault(false)
+
     fun platformLabel(value: String): String? {
         val host = runCatching { URI(value.trim()).host?.lowercase() }.getOrNull() ?: return null
         return when {

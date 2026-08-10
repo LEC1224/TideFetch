@@ -65,6 +65,31 @@ class FormatSelectorTest {
         assertEquals("https://example.com/video", command.last())
     }
 
+    @Test
+    fun `requests include bounded retry policy`() {
+        val command = FormatSelector.createRequest(
+            DownloadConfig("https://example.com/video"),
+            File("staging"),
+            File("staging/result.txt"),
+        ).buildCommand()
+
+        assertContainsPair(command, "--retries", "3")
+        assertContainsPair(command, "--fragment-retries", "3")
+        assertContainsPair(command, "--extractor-retries", "3")
+    }
+
+    @Test
+    fun `twitter fallback uses documented syndication extractor`() {
+        val command = FormatSelector.createRequest(
+            DownloadConfig("https://x.com/example/status/123"),
+            File("staging"),
+            File("staging/result.txt"),
+            useTwitterSyndicationFallback = true,
+        ).buildCommand()
+
+        assertContainsPair(command, "--extractor-args", "twitter:api=syndication")
+    }
+
     private fun assertContainsPair(command: List<String>, option: String, value: String) {
         val index = command.indexOf(option)
         assertTrue("Missing $option in $command", index >= 0)

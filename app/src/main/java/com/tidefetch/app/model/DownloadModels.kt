@@ -93,6 +93,7 @@ data class DownloadSnapshot(
     val outputMimeType: String? = null,
     val fileName: String? = null,
     val errorMessage: String? = null,
+    val errorSuggestion: String? = null,
 ) {
     val isActive: Boolean
         get() = phase in setOf(

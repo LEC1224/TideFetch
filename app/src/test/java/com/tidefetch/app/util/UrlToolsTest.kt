@@ -36,5 +36,7 @@ class UrlToolsTest {
         assertEquals("X / Twitter", UrlTools.platformLabel("https://x.com/user/status/1"))
         assertEquals("example.org", UrlTools.platformLabel("https://www.example.org/video"))
         assertTrue(UrlTools.isValidWebUrl("https://www.facebook.com/reel/123"))
+        assertTrue(UrlTools.isXUrl("https://mobile.twitter.com/user/status/1"))
+        assertFalse(UrlTools.isXUrl("https://notx.com/user/status/1"))
     }
 }

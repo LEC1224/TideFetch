@@ -21,8 +21,10 @@ full GPL-3.0 license to be made available under GPL-compatible terms.
   https://github.com/yt-dlp/yt-dlp/blob/master/THIRD_PARTY_LICENSES.txt
 
 Release payloads may include components under MIT and ISC terms in addition to
-the main project's Unlicense. Preserve the notices accompanying the exact
-payload embedded by youtubedl-android.
+the main project's Unlicense. TideFetch 0.1.0-alpha.3 actively installs the
+checksum-pinned yt-dlp 2026.07.04 app resource and also carries the wrapper's
+dormant 2025.11.12 resource. The matching source snapshots and bundled notices
+for both are included in the version-specific corresponding-source package.
 
 ## FFmpeg
 

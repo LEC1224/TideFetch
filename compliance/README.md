@@ -13,7 +13,8 @@ describes.
 
 - the exact TideFetch Git tree for the release;
 - the youtubedl-android 0.18.1 source snapshot;
-- yt-dlp 2025.11.12 source;
+- yt-dlp 2026.07.04 source for TideFetch's active, checksum-pinned runtime and
+  yt-dlp 2025.11.12 source for the dormant resource inside the wrapper AAR;
 - FFmpeg 7.1.1 source;
 - Python 3.12.11 source;
 - QuickJS 2025-04-26 source;
@@ -30,7 +31,7 @@ Prerequisites on Windows are Git, PowerShell 7, WSL2 with Ubuntu, `curl`,
 ```powershell
 wsl.exe bash compliance/download-termux-sources.sh
 ./gradlew.bat exportReleaseDependencySources
-pwsh -File compliance/make-source-package.ps1 -GitRef HEAD -Version 0.1.0-alpha.2 `
+pwsh -File compliance/make-source-package.ps1 -GitRef HEAD -Version 0.1.0-alpha.3 `
   -ApkPath app/build/outputs/apk/release/app-arm64-v8a-release.apk
 ```
 

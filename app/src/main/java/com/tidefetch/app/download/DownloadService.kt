@@ -18,7 +18,10 @@ import com.tidefetch.app.model.OutputFormat
 import com.tidefetch.app.model.ResolutionPreset
 import com.tidefetch.app.util.UrlTools
 import com.yausername.youtubedl_android.YoutubeDL
+import com.yausername.youtubedl_android.YoutubeDLRequest
+import com.yausername.youtubedl_android.YoutubeDLResponse
 import java.io.File
+import java.util.ArrayDeque
 import java.util.UUID
 import java.util.concurrent.atomic.AtomicInteger
 import java.util.concurrent.atomic.AtomicReference
@@ -127,30 +130,42 @@ class DownloadService : Service() {
             DownloaderRuntime.ensureInitialized(this)
             ensureSessionActive(session)
 
-            val request = FormatSelector.createRequest(config, stagingDirectory, resultManifest)
             DownloadEvents.addLog("Starting ${config.format.displayName}")
             notifyProgress("Connecting to the source…", null)
 
             val response = withTimeout(MAX_DOWNLOAD_DURATION_MILLIS) {
-                runInterruptible(Dispatchers.IO) {
-                    YoutubeDL.getInstance().execute(
-                        request = request,
-                        processId = session.processId,
-                        // Keep stderr separate: the wrapper places it in the thrown
-                        // YoutubeDLException, which preserves useful failure details.
-                        redirectErrorStream = false,
-                    ) { progress, etaSeconds, line ->
-                        if (session.lifecycle.get() == SESSION_RUNNING &&
-                            activeSession.get() === session
-                        ) {
-                            DownloadEvents.updateProgress(progress, etaSeconds, line)
-                            val snapshot = DownloadEvents.state.value
-                            notifyProgress(snapshot.status, snapshot.progress)
-                        }
+                val primaryRequest = FormatSelector.createRequest(
+                    config,
+                    stagingDirectory,
+                    resultManifest,
+                )
+                try {
+                    executeRequest(primaryRequest, session)
+                } catch (error: Throwable) {
+                    if (error is CancellationException) throw error
+                    ensureSessionActive(session)
+                    if (!DownloadErrorFormatter.shouldRetryXWithSyndication(
+                            config.url,
+                            error,
+                            session.diagnosticsSnapshot(),
+                        )
+                    ) {
+                        throw error
                     }
+
+                    DownloadEvents.addLog(
+                        "X's primary API path failed; retrying once with the public syndication fallback",
+                    )
+                    notifyProgress("Retrying through X's public fallback…", null)
+                    val fallbackRequest = FormatSelector.createRequest(
+                        config,
+                        stagingDirectory,
+                        resultManifest,
+                        useTwitterSyndicationFallback = true,
+                    )
+                    executeRequest(fallbackRequest, session)
                 }
             }
-            response.err.takeIf(String::isNotBlank)?.let(DownloadEvents::addLog)
             check(response.exitCode == 0) { "yt-dlp exited with code ${response.exitCode}" }
             ensureSessionActive(session)
 
@@ -188,9 +203,13 @@ class DownloadService : Service() {
         } catch (_: CancellationException) {
             if (!session.timedOut) DownloadEvents.markCanceled()
         } catch (error: Throwable) {
-            val rawMessage = error.message.orEmpty().ifBlank { error::class.java.simpleName }
-            DownloadEvents.addLog(rawMessage)
-            DownloadEvents.markError(friendlyError(rawMessage))
+            DownloadErrorFormatter.throwableDetails(error).forEach(DownloadEvents::addLog)
+            val report = DownloadErrorFormatter.describe(
+                error = error,
+                diagnostics = session.diagnosticsSnapshot(),
+                sourceUrl = config.url,
+            )
+            DownloadEvents.markError(report.message, report.suggestion)
         } finally {
             val removed = runCatching { stagingDirectory.deleteRecursively() }.getOrDefault(false)
             if (stagingDirectory.exists() && !removed) {
@@ -226,6 +245,26 @@ class DownloadService : Service() {
     private suspend fun ensureSessionActive(session: DownloadSession) {
         currentCoroutineContext().ensureActive()
         if (session.lifecycle.get() != SESSION_RUNNING) throw CancellationException()
+    }
+
+    private suspend fun executeRequest(
+        request: YoutubeDLRequest,
+        session: DownloadSession,
+    ): YoutubeDLResponse = runInterruptible(Dispatchers.IO) {
+        YoutubeDL.getInstance().execute(
+            request = request,
+            processId = session.processId,
+            // Merge stderr into the callback so Technical details receives the
+            // extractor's original response even when the command exits non-zero.
+            redirectErrorStream = true,
+        ) { progress, etaSeconds, line ->
+            session.captureDiagnostic(line)
+            if (session.lifecycle.get() == SESSION_RUNNING && activeSession.get() === session) {
+                DownloadEvents.updateProgress(progress, etaSeconds, line)
+                val snapshot = DownloadEvents.state.value
+                notifyProgress(snapshot.status, snapshot.progress)
+            }
+        }
     }
 
     private fun destroyProcessSafely(processId: String) {
@@ -305,25 +344,6 @@ class DownloadService : Service() {
                 Manifest.permission.POST_NOTIFICATIONS,
             ) == PackageManager.PERMISSION_GRANTED
 
-    private fun friendlyError(raw: String): String {
-        val message = raw.lowercase()
-        return when {
-            "unsupported url" in message ->
-                "This site or link type is not supported by the bundled yt-dlp version."
-            "requested format is not available" in message ->
-                "That resolution or format is not available for this link. Try Original or another format."
-            "private" in message || "login" in message || "cookies" in message ||
-                "sign in" in message ->
-                "This media needs an authenticated account or is not publicly available."
-            "network" in message || "timed out" in message || "connection" in message ||
-                "unable to download" in message ->
-                "The source could not be reached. Check your connection and try again."
-            "no space" in message || "enospc" in message ->
-                "There is not enough free storage to finish this download."
-            else -> "yt-dlp could not complete this download. Open Technical details for the exact log."
-        }
-    }
-
     private fun Intent.toConfig(): DownloadConfig? {
         val url = getStringExtra(EXTRA_URL)?.trim()?.takeIf(UrlTools::isValidWebUrl) ?: return null
         val resolution = getStringExtra(EXTRA_RESOLUTION)
@@ -337,8 +357,20 @@ class DownloadService : Service() {
 
     private class DownloadSession(val processId: String) {
         val lifecycle = AtomicInteger(SESSION_RUNNING)
+        private val diagnostics = ArrayDeque<String>()
         @Volatile var job: Job? = null
         @Volatile var timedOut: Boolean = false
+
+        fun captureDiagnostic(line: String) = synchronized(diagnostics) {
+            line.lineSequence().map(String::trim).filter(String::isNotBlank).forEach {
+                if (diagnostics.size == MAX_DIAGNOSTIC_LINES) diagnostics.removeFirst()
+                diagnostics.addLast(it)
+            }
+        }
+
+        fun diagnosticsSnapshot(): List<String> = synchronized(diagnostics) {
+            diagnostics.toList()
+        }
     }
 
     companion object {
@@ -351,6 +383,7 @@ class DownloadService : Service() {
         private const val SESSION_RUNNING = 0
         private const val SESSION_CANCEL_REQUESTED = 1
         private const val SESSION_COMMITTING = 2
+        private const val MAX_DIAGNOSTIC_LINES = 300
         private const val MAX_DOWNLOAD_DURATION_MILLIS = 5L * 60L * 60L * 1_000L
     }
 }
